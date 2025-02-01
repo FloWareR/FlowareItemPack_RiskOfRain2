@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 namespace FlowareItemPack.Items
 {
-    internal class DisperseCrystal : BaseItem
+    internal class DisperseObsidian : BaseItem
     {
         public override ItemDef ItemDef { get; } = ScriptableObject.CreateInstance<ItemDef>();
         private GameObject visualEffectPrefab;
@@ -16,18 +16,18 @@ namespace FlowareItemPack.Items
         public override void Initialize()
         {
             var assets = new Assets();
-            assets.PopulateAssets("matches", "matches");
+            assets.PopulateAssets("disperseobsidian", "disperseobsidian");
 
-            ItemDef.name = "disperse_crystal";
-            ItemDef.nameToken = "FLOWARE_DISPERSECRYSTAL_NAME";
-            ItemDef.pickupToken = "FLOWARE_DISPERSECRYSTAL_PICKUP";
-            ItemDef.descriptionToken = "FLOWARE_DISPERSECRYSTAL_DESC";
-            ItemDef.loreToken = "FLOWARE_DISPERSECRYSTA_LORE";
+            ItemDef.name = "disperse_obsidian";
+            ItemDef.nameToken = "FLOWARE_DISPERSEOBSIDIAN_NAME";
+            ItemDef.pickupToken = "FLOWARE_DISPERSEOBSIDIAN_PICKUP";
+            ItemDef.descriptionToken = "FLOWARE_DISPERSEOBSIDIAN_DESC";
+            ItemDef.loreToken = "FLOWARE_DISPERSEOBSIDIAN_LORE";
 
-            LanguageAPI.Add("FLOWARE_DISPERSECRYSTAL_NAME", "Disperse Crystal");
-            LanguageAPI.Add("FLOWARE_DISPERSECRYSTAL_PICKUP", "Deal bonus damage to enemies at long distance corrupts all Focus Crystals");
-            LanguageAPI.Add("FLOWARE_DISPERSECRYSTAL_DESC", "Grants a damage boost to enemies further away. Displays a pulsating effect around the player.");
-            LanguageAPI.Add("FLOWARE_DISPERSECRYSTA_LORE", "A shard that resonates with the distant echoes of battle.");
+            LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_NAME", "Disperse Obsidian");
+            LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_PICKUP", "Deal bonus damage to enemies at long distance corrupts all Focus Crystals");
+            LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_DESC", "Grants a damage boost to enemies further away. Displays a pulsating effect around the player.");
+            LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_LORE", "A shard that resonates with the distant echoes of battle.");
 
             ItemDef.tier = ItemTier.VoidTier1;
             ItemDef._itemTierDef = Addressables.LoadAssetAsync<ItemTierDef>("RoR2/DLC1/Common/VoidTier1Def.asset").WaitForCompletion();
@@ -40,9 +40,6 @@ namespace FlowareItemPack.Items
 
             var displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(ItemDef, displayRules));
-
-            visualEffectPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Items/NearbyDamageBonus/DiamondDamageBonusEffect.prefab").WaitForCompletion();
-            if (visualEffectPrefab != null) Debug.LogWarning("NULLOS WEEWEE");
             Hook();
         }
 
@@ -70,7 +67,7 @@ namespace FlowareItemPack.Items
             {
                 self.inventory.RemoveItem(ItemCatalog.FindItemIndex("NearbyDamageBonus"), focusCrystalCount);
                 self.inventory.GiveItem(ItemDef.itemIndex, focusCrystalCount);
-                Debug.Log($"Transformed {focusCrystalCount} Focus Crystals into Disperse Crystals.");
+                Debug.Log($"Transformed {focusCrystalCount} Focus Crystals into Disperse Obsidians.");
             }
         }
 

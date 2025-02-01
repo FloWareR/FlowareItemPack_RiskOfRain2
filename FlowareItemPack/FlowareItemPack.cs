@@ -25,7 +25,7 @@ namespace FlowareItemPack
 
             // Initialize all items
             _items.Add(new BoxOMatches());
-            _items.Add(new DisperseCrystal());
+            _items.Add(new DisperseObsidian());
 
             Debug.LogWarning(_items.Count);
 
