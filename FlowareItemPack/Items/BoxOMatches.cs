@@ -73,15 +73,10 @@ namespace FlowareItemPack.Items
             if (itemCount > 0 && Util.CheckRoll(5f * itemCount, attacker.master)) // 5% chance to ignite (+5% per stack)
             {
                 var burnDuration = 2f * itemCount; // Burn for 2s + .5s per stack
-                var burnDamage = (report.attackerBody.baseDamage * 0.1f); // Burn does 15% of base damage per tick
+                var burnDamage = (report.attackerBody.baseDamage * 0.1f); // Burn does 10% of base damage per tick
                 var igniteTankCount = inventory.GetItemCount(igniteTankItemDef.itemIndex);
                 var debuffToApply = igniteTankCount > 0 ? DotController.DotIndex.StrongerBurn : DotController.DotIndex.Burn;
                 var dotController = DotController.FindDotController(victim.gameObject);
-
-                if (dotController != null && dotController.HasDotActive(debuffToApply))
-                {
-                    return;
-                }
 
                 if (debuffToApply == DotController.DotIndex.StrongerBurn)
                 {

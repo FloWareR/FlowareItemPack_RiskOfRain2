@@ -20,10 +20,10 @@ namespace FlowareItemPack.Items
             ItemDef.descriptionToken = "FLOWARE_VOIDMATCHES_DESC";
             ItemDef.loreToken = "FLOWARE_VOIDMATCHES_LORE";
 
-            LanguageAPI.Add("FLOWARE_VOIDMATCHES_NAME", "Box O' Matches");
-            LanguageAPI.Add("FLOWARE_VOIDMATCHES_PICKUP", "Light em' up, break em' down.");
-            LanguageAPI.Add("FLOWARE_VOIDMATCHES_DESC", "5% chance (+5% per stack) to set enemies on fire for 2 seconds (+0.5s per stack), dealing 10% base damage.");
-            LanguageAPI.Add("FLOWARE_VOIDMATCHES_LORE", "An old, half-empty box of matches. Each one a spark waiting to ignite chaos.");
+            LanguageAPI.Add("FLOWARE_VOIDMATCHES_NAME", "");
+            LanguageAPI.Add("FLOWARE_VOIDMATCHES_PICKUP", "");
+            LanguageAPI.Add("FLOWARE_VOIDMATCHES_DESC", "");
+            LanguageAPI.Add("FLOWARE_VOIDMATCHES_LORE", "");
 
             // Set item tier to Void Tier 1
             ItemDef.tier = ItemTier.VoidTier1;
@@ -62,53 +62,18 @@ namespace FlowareItemPack.Items
 
         public override void Hook()
         {
-            GlobalEventManager.onServerDamageDealt += OnServerDamageDealt;
+
         }
 
         public override void Unhook()
         {
-            GlobalEventManager.onServerDamageDealt -= OnServerDamageDealt;
+
         }
 
         private void OnServerDamageDealt(DamageReport report)
         {
-            if (!report.attackerBody || !report.victimBody)
-            {
-                return;
-            }
-            if ((report.damageInfo.damageType & DamageType.DoT) != 0) return;
+          
 
-            var attacker = report.attackerBody;
-            var inventory = attacker.inventory;
-            if (!inventory) return;
-
-            var itemCount = inventory.GetItemCount(ItemDef.itemIndex);
-            var victim = report.victimBody;
-            var igniteTankItemDef = ItemCatalog.GetItemDef(ItemCatalog.FindItemIndex("StrengthenBurn"));
-
-            if (itemCount > 0 && Util.CheckRoll(5f * itemCount, attacker.master)) // 5% chance to ignite (+5% per stack)
-            {
-                var burnDuration = 2f + 0.5f * (itemCount - 1); // Burn for 2s + 0.5s per stack
-                var burnDamage = report.attackerBody.baseDamage * 0.1f; // Burn does 10% of base damage per tick
-                var igniteTankCount = inventory.GetItemCount(igniteTankItemDef.itemIndex);
-                var debuffToApply = igniteTankCount > 0 ? DotController.DotIndex.StrongerBurn : DotController.DotIndex.Burn;
-                var dotController = DotController.FindDotController(victim.gameObject);
-
-                if (dotController != null && dotController.HasDotActive(debuffToApply)) return;
-
-                if (debuffToApply == DotController.DotIndex.StrongerBurn)
-                {
-                    burnDamage *= 4 * igniteTankCount;
-                }
-
-                DotController.InflictDot(
-                    report.victimBody.gameObject, // Target
-                    report.attackerBody.gameObject, // Attacker
-                    debuffToApply, // Burn effect
-                    burnDuration, // Duration
-                    burnDamage // Damage per tick
-                );
-            }
         }
     }
 }
