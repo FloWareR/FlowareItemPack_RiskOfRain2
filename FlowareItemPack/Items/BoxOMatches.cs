@@ -2,7 +2,7 @@
 using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using static RoR2.Items.BaseItemBodyBehavior;
+
 
 namespace FlowareItemPack.Items
 {
@@ -29,13 +29,13 @@ namespace FlowareItemPack.Items
             // Tier1=white, Tier2=green, Tier3=red, Lunar=Lunar, Boss=yellow, NoTier
 #pragma warning disable Publicizer001 // Accessing a member that was not originally public. Here we ignore this warning because with how this example is setup we are forced to do this
             ItemDef._itemTierDef = Addressables.LoadAssetAsync<ItemTierDef>("RoR2/Base/Common/Tier2Def.asset").WaitForCompletion();
-            ItemDef.tier = ItemTier.Tier2;
 #pragma warning restore Publicizer001
 
             //myItemDef.pickupIconSprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Common/MiscIcons/texMysteryIcon.png").WaitForCompletion();
             //myItemDef.pickupModelPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mystery/PickupMystery.prefab").WaitForCompletion();
             ItemDef.pickupIconSprite = assets.icon;
             ItemDef.pickupModelPrefab = assets.prefab;
+            ItemDef.tags = new ItemTag[] { ItemTag.Damage, ItemTag.HalcyoniteShrine };
 
             ItemDef.canRemove = true;
             ItemDef.hidden = false;

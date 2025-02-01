@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 namespace FlowareItemPack
@@ -7,15 +8,23 @@ namespace FlowareItemPack
     {
         public Sprite icon;
         public GameObject prefab;
-        
+
+        public static AssetBundle _assetBundle;
+
+
         public void PopulateAssets(string iconName, string prefabName)
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("FlowareItemPack.import"))
+            if (_assetBundle == null)
             {
-                var bundle = AssetBundle.LoadFromStream(stream);
-                icon = bundle.LoadAsset<Sprite>($"assets/import/icons/{iconName}.png");
-                prefab = bundle.LoadAsset<GameObject>($"assets/import/prefabs/{prefabName}.prefab");
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("FlowareItemPack.import"))
+                {
+                    _assetBundle = AssetBundle.LoadFromStream(stream);
+                }
             }
+
+
+            icon = _assetBundle.LoadAsset<Sprite>($"assets/import/icons/{iconName}.png");
+            prefab = _assetBundle.LoadAsset<GameObject>($"assets/import/prefabs/{prefabName}.prefab");
         }
     }
 }

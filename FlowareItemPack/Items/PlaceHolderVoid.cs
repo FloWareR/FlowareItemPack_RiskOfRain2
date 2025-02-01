@@ -14,17 +14,16 @@ namespace FlowareItemPack.Items
             var assets = new Assets();
             assets.PopulateAssets("matches", "matches");
 
-            ItemDef.name = "Matches";
-            ItemDef.nameToken = "FLOWARE_MATCHES_NAME";
-            ItemDef.pickupToken = "FLOWARE_MATCHES_PICKUP";
-            ItemDef.descriptionToken = "FLOWARE_MATCHES_DESC";
-            ItemDef.loreToken = "FLOWARE_MATCHES_LORE";
-            ItemDef.tags = new ItemTag[] { ItemTag.Damage };
+            ItemDef.name = "void_matches";
+            ItemDef.nameToken = "FLOWARE_VOIDMATCHES_NAME";
+            ItemDef.pickupToken = "FLOWARE_VOIDMATCHES_PICKUP";
+            ItemDef.descriptionToken = "FLOWARE_VOIDMATCHES_DESC";
+            ItemDef.loreToken = "FLOWARE_VOIDMATCHES_LORE";
 
-            LanguageAPI.Add("FLOWARE_MATCHES_NAME", "Box O' Matches");
-            LanguageAPI.Add("FLOWARE_MATCHES_PICKUP", "Light em' up, break em' down.");
-            LanguageAPI.Add("FLOWARE_MATCHES_DESC", "5% chance (+5% per stack) to set enemies on fire for 2 seconds (+0.5s per stack), dealing 10% base damage.");
-            LanguageAPI.Add("FLOWARE_MATCHES_LORE", "An old, half-empty box of matches. Each one a spark waiting to ignite chaos.");
+            LanguageAPI.Add("FLOWARE_VOIDMATCHES_NAME", "Box O' Matches");
+            LanguageAPI.Add("FLOWARE_VOIDMATCHES_PICKUP", "Light em' up, break em' down.");
+            LanguageAPI.Add("FLOWARE_VOIDMATCHES_DESC", "5% chance (+5% per stack) to set enemies on fire for 2 seconds (+0.5s per stack), dealing 10% base damage.");
+            LanguageAPI.Add("FLOWARE_VOIDMATCHES_LORE", "An old, half-empty box of matches. Each one a spark waiting to ignite chaos.");
 
             // Set item tier to Void Tier 1
             ItemDef.tier = ItemTier.VoidTier1;
@@ -34,13 +33,10 @@ namespace FlowareItemPack.Items
             ItemDef._itemTierDef = Addressables.LoadAssetAsync<ItemTierDef>("RoR2/DLC1/Common/VoidTier1Def.asset").WaitForCompletion();
 #pragma warning restore Publicizer001
 
-            // Debugging: Verify the tier and tier def
-            Debug.Log($"Item Tier: {ItemDef.tier}");
-            Debug.Log($"Item Tier Def: {ItemDef._itemTierDef?.name}");
-
             // Assign assets
             ItemDef.pickupIconSprite = assets.icon;
             ItemDef.pickupModelPrefab = assets.prefab;
+            ItemDef.tags = new ItemTag[] { };
 
             // Item settings
             ItemDef.canRemove = true;

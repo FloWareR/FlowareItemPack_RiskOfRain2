@@ -23,16 +23,23 @@ namespace FlowareItemPack
         {
             Log.Init(Logger);
 
+            // Initialize all items
             _items.Add(new BoxOMatches());
+            _items.Add(new PlaceHolderVoid());
+
+            Debug.LogWarning(_items.Count);
+
 
             foreach (var item in _items)
             {
                 item.Initialize();
+                Debug.Log($"Initializing {item.ItemDef.name}");
             }
         }
 
         private void OnDestroy()
         {
+            // Clean up all items
             foreach (var item in _items)
             {
                 item.Unhook();
