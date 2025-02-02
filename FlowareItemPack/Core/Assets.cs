@@ -1,8 +1,7 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using UnityEngine;
 
-namespace FlowareItemPack
+namespace FlowareItemPack.Core
 {
     public class Assets
     {

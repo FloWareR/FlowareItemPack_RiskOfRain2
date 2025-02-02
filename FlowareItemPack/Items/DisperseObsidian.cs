@@ -4,18 +4,22 @@ using VoidItemAPI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
+using UnityEditor;
+using System.Reflection;
+using System;
 
 namespace FlowareItemPack.Items
 {
     internal class DisperseObsidian : BaseItem
     {
         public override ItemDef ItemDef { get; } = ScriptableObject.CreateInstance<ItemDef>();
-        private GameObject visualEffectPrefab;
         private GameObject effect;
+        private GameObject effect2;
+
 
         public override void Initialize()
         {
-            var assets = new Assets();
+            var assets = new Core.Assets();
             assets.PopulateAssets("disperseobsidian", "disperseobsidian");
 
             ItemDef.name = "disperse_obsidian";
@@ -45,19 +49,110 @@ namespace FlowareItemPack.Items
 
         public override void Hook()
         {
-            On.RoR2.CharacterBody.OnInventoryChanged += OnInventoryChanged;
+            On.RoR2.CharacterMaster.OnInventoryChanged += OnInventoryChanged;
             On.RoR2.HealthComponent.TakeDamage += OnDamageDealt;
         }
 
         public override void Unhook()
         {
-            On.RoR2.CharacterBody.OnInventoryChanged -= OnInventoryChanged;
+            On.RoR2.CharacterMaster.OnInventoryChanged -= OnInventoryChanged;
             On.RoR2.HealthComponent.TakeDamage -= OnDamageDealt;
         }
 
-        private void OnInventoryChanged(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
+        private void OnInventoryChanged(On.RoR2.CharacterMaster.orig_OnInventoryChanged orig, CharacterMaster self)
         {
             orig(self);
+
+            if (!self || !self.inventory) return;
+
+            CharacterBody body = self.GetBody();
+            if (!body || !body.isPlayerControlled) return; 
+
+            var itemCount = self.inventory.GetItemCount(ItemDef.itemIndex);
+
+            if (itemCount > 0)
+            {
+                Debug.Log("DEBUG: Item added, creating effect.");
+                InstantiateEffect(body);
+            }
+            else
+            {
+                Debug.Log("DEBUG: Item removed, destroying effect.");
+                DestroyEffect();
+            }
+        }
+
+
+        private void InstantiateEffect(CharacterBody self)
+        {
+            Debug.Log("Attempting to load NearbyDamageBonusIndicator from LegacyResourcesAPI.");
+
+            GameObject original = LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/NearbyDamageBonusIndicator");
+
+            if (original == null)
+            {
+                Debug.LogError("Failed to load NearbyDamageBonusIndicator.");
+                return;
+            }
+
+            Debug.Log("Prefab loaded successfully. Instantiating...");
+
+            GameObject spawnedObject = GameObject.Instantiate(original, self.corePosition, Quaternion.identity);
+
+            if (spawnedObject == null)
+            {
+                Debug.LogError("Failed to instantiate NearbyDamageBonusIndicator.");
+                return;
+            }
+
+            if (!spawnedObject.TryGetComponent(out NetworkIdentity netId))
+            {
+                netId = spawnedObject.AddComponent<NetworkIdentity>();
+                Debug.LogWarning("Added NetworkIdentity to spawnedObject.");
+            }
+            Debug.Log("Attaching NetworkedBodyAttachment.");
+
+            var scaleMultiplier = 2.3f; 
+            spawnedObject.transform.localScale *= scaleMultiplier;
+
+
+            MeshRenderer meshRenderer = spawnedObject.GetComponentInChildren<MeshRenderer>();
+            if (meshRenderer != null)
+            {
+                // Change the color to purple
+                meshRenderer.material.color = Color.green;
+                Debug.Log("Ring color changed to purple.");
+            }
+            else
+            {
+                Debug.LogError("No MeshRenderer found in NearbyDamageBonusIndicator.");
+            }
+
+            NetworkedBodyAttachment attachment = spawnedObject.GetComponent<NetworkedBodyAttachment>();
+            if (attachment == null)
+            {
+                Debug.LogError("NearbyDamageBonusIndicator is missing NetworkedBodyAttachment.");
+                return;
+            }
+
+            else
+            {
+                Debug.LogError("No Renderer found on NearbyDamageBonusIndicator.");
+            }
+
+            spawnedObject.transform.SetParent(self.transform, true);
+            attachment.AttachToGameObjectAndSpawn(self.gameObject, null);
+            effect = spawnedObject; // Store the effect for later 
+        }
+
+        private void DestroyEffect()
+        {
+            if (effect != null)
+            {
+                GameObject.Destroy(effect);
+                effect = null;
+                GameObject.Destroy(effect2);
+            }
         }
 
 
@@ -97,7 +192,7 @@ namespace FlowareItemPack.Items
             }
 
             var distance = Vector3.Distance(attackerBody.transform.position, self.transform.position);
-            if (distance > 31f)
+            if (distance > 29.9f)
             {
                 damageInfo.damage *= 1 + (0.2f * itemCount);
                 damageInfo.damageColorIndex = DamageColorIndex.Void;

@@ -12,7 +12,7 @@ namespace FlowareItemPack.Items
 
         public override void Initialize()
         {
-            var assets = new Assets();
+            var assets = new Core.Assets();
             assets.PopulateAssets("matches", "matches");
 
             ItemDef.name = "Matches";
