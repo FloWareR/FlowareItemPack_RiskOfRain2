@@ -25,8 +25,8 @@ namespace FlowareItemPack.Items
             ItemDef.loreToken = "FLOWARE_DISPERSEOBSIDIAN_LORE";
 
             LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_NAME", "Disperse Obsidian");
-            LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_PICKUP", "Deal bonus damage to enemies at long distance corrupts all Focus Crystals");
-            LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_DESC", "Grants a damage boost to enemies further away. Displays a pulsating effect around the player.");
+            LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_PICKUP", "Deal bonus damage to enemies at long distance. <color=#ed7fcd>Corrupts all Focus Crystals </color>");
+            LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_DESC", "Grants a damage boost against enemies further away. Displays a pulsating effect around the player. <color=#ed7fcd>Corrupts all Focus Crystals </color>");
             LanguageAPI.Add("FLOWARE_DISPERSEOBSIDIAN_LORE", "A shard that resonates with the distant echoes of battle.");
 
             ItemDef.tier = ItemTier.VoidTier1;
@@ -99,7 +99,7 @@ namespace FlowareItemPack.Items
             var distance = Vector3.Distance(attackerBody.transform.position, self.transform.position);
             if (distance > 31f)
             {
-                damageInfo.damage *= 1 + (0.3f * itemCount);
+                damageInfo.damage *= 1 + (0.2f * itemCount);
                 damageInfo.damageColorIndex = DamageColorIndex.Void;
             }
 
