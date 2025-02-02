@@ -30,4 +30,10 @@
 		<PackageReference Include="MMHOOK.RoR2" Version="2024.11.4" NoWarn="NU1701" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Reference Include="VoidItemAPI">
+	    <HintPath>C:\Users\rafax\Downloads\RumblingJOSEPH-VoidItemAPI-1.1.0\VoidItemAPI.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
 </Project>

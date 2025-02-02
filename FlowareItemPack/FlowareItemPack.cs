@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace FlowareItemPack
 {
+    [BepInDependency(VoidItemAPI.VoidItemAPI.MODGUID)]
     [BepInDependency(ItemAPI.PluginGUID)]
     [BepInDependency(LanguageAPI.PluginGUID)]
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -15,7 +16,7 @@ namespace FlowareItemPack
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "Floware";
         public const string PluginName = "FlowareItemPack";
-        public const string PluginVersion = "1.1.4";
+        public const string PluginVersion = "1.2.0";
 
         private readonly List<BaseItem> _items = new List<BaseItem>();
 
@@ -26,8 +27,6 @@ namespace FlowareItemPack
             // Initialize all items
             _items.Add(new BoxOMatches());
             _items.Add(new DisperseObsidian());
-
-            Debug.LogWarning(_items.Count);
 
 
             foreach (var item in _items)

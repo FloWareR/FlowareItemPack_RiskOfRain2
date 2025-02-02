@@ -1,6 +1,6 @@
 ﻿using R2API;
 using RoR2;
-using System;
+using VoidItemAPI; 
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
@@ -31,16 +31,16 @@ namespace FlowareItemPack.Items
 
             ItemDef.tier = ItemTier.VoidTier1;
             ItemDef._itemTierDef = Addressables.LoadAssetAsync<ItemTierDef>("RoR2/DLC1/Common/VoidTier1Def.asset").WaitForCompletion();
-
             ItemDef.pickupIconSprite = assets.icon;
             ItemDef.pickupModelPrefab = assets.prefab;
             ItemDef.tags = new ItemTag[] { };
             ItemDef.canRemove = true;
             ItemDef.hidden = false;
 
-            var displayRules = new ItemDisplayRuleDict(null);
-            ItemAPI.Add(new CustomItem(ItemDef, displayRules));
-            Hook();
+            ItemAPI.Add(new CustomItem(ItemDef, new ItemDisplayRuleDict(null)));
+           
+            VoidTransformation.CreateTransformation(ItemDef, "NearbyDamageBonus");
+            Hook(); 
         }
 
         public override void Hook()
@@ -57,18 +57,7 @@ namespace FlowareItemPack.Items
 
         private void OnInventoryChanged(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
-            orig(self);
-            if (!self.inventory) return;
 
-            int itemCount = self.inventory.GetItemCount(ItemDef.itemIndex);
-            if (itemCount <= 0) return;
-            var focusCrystalCount = self.inventory.GetItemCount(ItemCatalog.FindItemIndex("NearbyDamageBonus"));
-            if (focusCrystalCount > 0)
-            {
-                self.inventory.RemoveItem(ItemCatalog.FindItemIndex("NearbyDamageBonus"), focusCrystalCount);
-                self.inventory.GiveItem(ItemDef.itemIndex, focusCrystalCount);
-                Debug.Log($"Transformed {focusCrystalCount} Focus Crystals into Disperse Obsidians.");
-            }
         }
 
 
@@ -110,7 +99,7 @@ namespace FlowareItemPack.Items
             var distance = Vector3.Distance(attackerBody.transform.position, self.transform.position);
             if (distance > 31f)
             {
-                damageInfo.damage *= 1 + (0.25f * itemCount);
+                damageInfo.damage *= 1 + (0.3f * itemCount);
                 damageInfo.damageColorIndex = DamageColorIndex.Void;
             }
 
