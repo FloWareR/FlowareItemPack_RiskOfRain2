@@ -16,7 +16,7 @@ namespace FlowareItemPack
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "Floware";
         public const string PluginName = "FlowareItemPack";
-        public const string PluginVersion = "1.2.0";
+        public const string PluginVersion = "1.2.2";
 
         private readonly List<BaseItem> _items = new List<BaseItem>();
 

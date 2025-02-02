@@ -57,7 +57,7 @@ namespace FlowareItemPack.Items
 
         private void OnInventoryChanged(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
-
+            orig(self);
         }
 
 
