@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace FlowareItemPack
 {
-    [BepInDependency(VoidItemAPI.VoidItemAPI.MODGUID)]
     [BepInDependency(ItemAPI.PluginGUID)]
     [BepInDependency(LanguageAPI.PluginGUID)]
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -16,7 +15,7 @@ namespace FlowareItemPack
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "Floware";
         public const string PluginName = "FlowareItemPack";
-        public const string PluginVersion = "1.2.3";
+        public const string PluginVersion = "1.2.5";
 
         private readonly List<BaseItem> _items = new List<BaseItem>();
 

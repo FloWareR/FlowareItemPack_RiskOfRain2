@@ -1,11 +1,13 @@
-﻿using R2API;
+﻿using HarmonyLib;
+using On.RoR2.Items;
+using R2API;
 using RoR2;
-using VoidItemAPI; 
+using RoR2.ExpansionManagement;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
-using UnityEditor;
-using System.Reflection;
+
+
 using System;
 
 namespace FlowareItemPack.Items
@@ -13,9 +15,9 @@ namespace FlowareItemPack.Items
     internal class DisperseObsidian : BaseItem
     {
         public override ItemDef ItemDef { get; } = ScriptableObject.CreateInstance<ItemDef>();
+
         private GameObject effect;
         private GameObject effect2;
-
 
         public override void Initialize()
         {
@@ -35,30 +37,50 @@ namespace FlowareItemPack.Items
 
             ItemDef.tier = ItemTier.VoidTier1;
             ItemDef._itemTierDef = Addressables.LoadAssetAsync<ItemTierDef>("RoR2/DLC1/Common/VoidTier1Def.asset").WaitForCompletion();
+            ItemDef.tags = new ItemTag[] { ItemTag.Damage };
+
             ItemDef.pickupIconSprite = assets.icon;
             ItemDef.pickupModelPrefab = assets.prefab;
-            ItemDef.tags = new ItemTag[] { };
+
             ItemDef.canRemove = true;
             ItemDef.hidden = false;
 
             ItemAPI.Add(new CustomItem(ItemDef, new ItemDisplayRuleDict(null)));
-           
-            VoidTransformation.CreateTransformation(ItemDef, "NearbyDamageBonus");
             Hook(); 
         }
+
 
         public override void Hook()
         {
             On.RoR2.CharacterMaster.OnInventoryChanged += OnInventoryChanged;
             On.RoR2.HealthComponent.TakeDamage += OnDamageDealt;
+            On.RoR2.Items.ContagiousItemManager.Init += SetTransformation;
+
         }
 
         public override void Unhook()
         {
             On.RoR2.CharacterMaster.OnInventoryChanged -= OnInventoryChanged;
             On.RoR2.HealthComponent.TakeDamage -= OnDamageDealt;
+            On.RoR2.Items.ContagiousItemManager.Init -= SetTransformation;
+
         }
 
+        private void SetTransformation(ContagiousItemManager.orig_Init orig)
+        {
+
+            var dlcType = ExpansionCatalog.expansionDefs[0];
+            ItemDef.requiredExpansion = dlcType;
+
+            ItemDef.Pair transformation = new ItemDef.Pair()
+            {
+                itemDef1 = RoR2Content.Items.NearbyDamageBonus,
+                itemDef2 = ItemDef
+            };
+            ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = 
+                ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddToArray(transformation);
+            orig();
+        }
         private void OnInventoryChanged(On.RoR2.CharacterMaster.orig_OnInventoryChanged orig, CharacterMaster self)
         {
             orig(self);
@@ -81,7 +103,6 @@ namespace FlowareItemPack.Items
                 DestroyEffect();
             }
         }
-
 
         private void InstantiateEffect(CharacterBody self)
         {
@@ -154,7 +175,6 @@ namespace FlowareItemPack.Items
                 GameObject.Destroy(effect2);
             }
         }
-
 
         private void OnDamageDealt(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
