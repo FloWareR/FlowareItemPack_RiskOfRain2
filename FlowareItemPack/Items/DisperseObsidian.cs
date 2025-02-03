@@ -17,7 +17,6 @@ namespace FlowareItemPack.Items
         public override ItemDef ItemDef { get; } = ScriptableObject.CreateInstance<ItemDef>();
 
         private GameObject effect;
-        private GameObject effect2;
 
         public override void Initialize()
         {
@@ -81,6 +80,7 @@ namespace FlowareItemPack.Items
                 ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddToArray(transformation);
             orig();
         }
+
         private void OnInventoryChanged(On.RoR2.CharacterMaster.orig_OnInventoryChanged orig, CharacterMaster self)
         {
             orig(self);
@@ -106,8 +106,6 @@ namespace FlowareItemPack.Items
 
         private void InstantiateEffect(CharacterBody self)
         {
-            Debug.Log("Attempting to load NearbyDamageBonusIndicator from LegacyResourcesAPI.");
-
             GameObject original = LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/NearbyDamageBonusIndicator");
 
             if (original == null)
@@ -115,8 +113,6 @@ namespace FlowareItemPack.Items
                 Debug.LogError("Failed to load NearbyDamageBonusIndicator.");
                 return;
             }
-
-            Debug.Log("Prefab loaded successfully. Instantiating...");
 
             GameObject spawnedObject = GameObject.Instantiate(original, self.corePosition, Quaternion.identity);
 
@@ -142,7 +138,6 @@ namespace FlowareItemPack.Items
             {
                 // Change the color to purple
                 meshRenderer.material.color = Color.green;
-                Debug.Log("Ring color changed to purple.");
             }
             else
             {
@@ -155,7 +150,6 @@ namespace FlowareItemPack.Items
                 Debug.LogError("NearbyDamageBonusIndicator is missing NetworkedBodyAttachment.");
                 return;
             }
-
             else
             {
                 Debug.LogError("No Renderer found on NearbyDamageBonusIndicator.");
@@ -172,7 +166,6 @@ namespace FlowareItemPack.Items
             {
                 GameObject.Destroy(effect);
                 effect = null;
-                GameObject.Destroy(effect2);
             }
         }
 

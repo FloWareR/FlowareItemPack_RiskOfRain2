@@ -89,6 +89,7 @@ namespace FlowareItemPack.Items
 
         private void OnDamageDealt(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
+            orig(self, damageInfo);
 
         }
     }
